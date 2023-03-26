@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "[![Actions Status](https://github.com/korchel/frontend-project-11/workflows/hexlet-check/badge.svg)](https://github.com/korchel/frontend-project-11/actions)",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "webpack --mode development",
     "serve": "webpack serve --open --mode development",
@@ -43,6 +44,7 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
-    "bootstrap": "^5.2.3"
+    "bootstrap": "^5.2.3",
+    "yup": "^1.0.2"
   }
 }

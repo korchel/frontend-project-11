@@ -8,7 +8,7 @@ const getFeedandPosts = (parsedXML) => {
   const feedDescription = channel.querySelector('description').textContent;
   const feedLink = channel.querySelector('link').textContent;
   const newFeed = {
-    title: feedTitle, desciption: feedDescription, link: feedLink, id,
+    title: feedTitle, description: feedDescription, link: feedLink, id,
   };
 
   const postItems = channel.querySelectorAll('item');

@@ -1,12 +1,9 @@
 import onChange from 'on-change';
 import i18n from 'i18next';
-import axios from 'axios';
+
+import formHandler from './controller.js';
 import render from './view/render.js';
 import texts from './resources.js';
-import parseRSS from './parseRSS.js';
-import getFeedandPosts from './getFeedandPosts.js';
-import validateForm from './validateForm.js';
-
 // https://rt.com/rss/news
 
 // http://www.dp.ru/exportnews.xml
@@ -27,42 +24,31 @@ const app = () => {
 
   const initialState = {
     form: {
+      processState: 'filling',
+      processError: null,
       valid: true,
+      error: '',
+    },
+    rss: {
       feeds: [],
       posts: [],
-      error: '',
+    },
+    uiState: {
+      visitedLinks: [],
     },
   };
 
-  const form = document.querySelector('.rss-form');
-  const watchedState = onChange(initialState, (path, value) => render(initialState, form));
+  const elements = {
+    form: document.querySelector('.rss-form'),
+    inputElement: document.querySelector('#url-input'),
+    feedbackElement: document.querySelector('.feedback'),
+    feedsColumn: document.querySelector('.feeds'),
+    postsColumn: document.querySelector('.posts'),
+  };
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const url = formData.get('url');
-    const feedLinks = watchedState.form.feeds.map((feed) => feed.link);
-    console.log(feedLinks)
-    validateForm(i18nextInstance, url, feedLinks)
-      .then(() => {
-        watchedState.form.error = '';
-        watchedState.form.valid = true;
-        axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${url}`)
-          .then((responce) => {
-            const xmlString = responce.data.contents;
-            const parsedXML = parseRSS(xmlString);
-            const [newFeed, newPosts] = getFeedandPosts(parsedXML);
-            watchedState.form.feeds.push(newFeed);
-            watchedState.form.posts.push(...newPosts);
-          })
-          .catch((e) => console.log(e));
-      })
-      .catch((err) => {
-        const [error] = err.errors;
-        watchedState.form.error = error;
-        watchedState.form.valid = false;
-      });
-  });
+  const watchedState = onChange(initialState, render(initialState, elements));
+
+  elements.form.addEventListener('submit', formHandler(watchedState, initialState, i18nextInstance));
 };
 
 export default app;

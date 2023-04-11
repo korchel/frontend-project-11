@@ -47,12 +47,21 @@ const renderPosts = (state, elements) => {
     button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
     button.setAttribute('type', 'button');
     button.setAttribute('data-id', '2');
-    button.setAttribute('data-bs-toggle', 'modal');
-    button.setAttribute('data-bs-target', '#modal');
+    button.dataset.bsToggle = 'modal';
+    button.dataset.bsTarget = toString(post.id);
     button.innerText = 'Просмотр';
     listItemElement.append(button);
+    button.addEventListener('click', renderModal(elements, post))
   });
 };
+
+const renderModal = (elements, post) => (e) => {
+  console.log(post.id)
+  elements.modal.modalWindow.setAttribute('id', `${post.id}`);
+  elements.modal.header.innerText = post.title;
+  elements.modal.content.innerText = post.description;
+  elements.modal.link.setAttribute('href', post.link);
+}
 
 const renderFeeds = (state, elements) => {
   const cardElement = document.createElement('div');
@@ -90,7 +99,6 @@ const renderFeeds = (state, elements) => {
 };
 
 const render = (state, elements) => (path, value, prevValue) => {
-  console.log(path)
   switch (path) {
     case 'rss.posts':
       renderFeeds(state, elements);

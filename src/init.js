@@ -44,6 +44,12 @@ const app = () => {
     feedbackElement: document.querySelector('.feedback'),
     feedsColumn: document.querySelector('.feeds'),
     postsColumn: document.querySelector('.posts'),
+    modal: {
+      modalWindow: document.querySelector('.modal'),
+      header: document.querySelector('.modal-title'),
+      content: document.querySelector('.modal-body'),
+      link: document.querySelector('.full-article'),
+    },
   };
 
   const watchedState = onChange(initialState, render(initialState, elements));

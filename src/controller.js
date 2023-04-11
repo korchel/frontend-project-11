@@ -19,7 +19,6 @@ export default (watchedState, state, i18nextInstance) => (e) => {
           const parsedXML = parseRSS(xmlString);
           const [newFeed, newPosts] = getFeedandPosts(parsedXML);
           state.rss.feeds.push(newFeed);
-          console.log(state)
           watchedState.rss.posts.push(...newPosts);
         })
         .catch((e) => console.log(e));

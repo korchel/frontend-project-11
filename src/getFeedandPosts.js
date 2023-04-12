@@ -14,7 +14,7 @@ const getFeedandPosts = (parsedXML) => {
   const newPosts = Array.from(postItems).map((item) => {
     const postTitle = item.querySelector('title').textContent;
     const postLink = item.querySelector('link').textContent;
-    const postDescription = item.querySelector('description');
+    const postDescription = item.querySelector('description').textContent;
     return {
       title: postTitle,
       link: postLink,

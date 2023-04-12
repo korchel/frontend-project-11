@@ -37,6 +37,8 @@ const renderPosts = (state, elements) => {
     postsListElement.appendChild(listItemElement);
 
     const linkElement = document.createElement('a');
+    linkElement.classList.add('fw-bold');
+    linkElement.setAttribute('post-id', `${post.id}`);
     linkElement.setAttribute('href', post.link);
     linkElement.setAttribute('target', '_blank');
     linkElement.setAttribute('rel', 'noopener noreferrer');
@@ -48,20 +50,25 @@ const renderPosts = (state, elements) => {
     button.setAttribute('type', 'button');
     button.setAttribute('data-id', '2');
     button.dataset.bsToggle = 'modal';
-    button.dataset.bsTarget = toString(post.id);
+    button.dataset.bsTarget = '#modal';
     button.innerText = 'Просмотр';
     listItemElement.append(button);
-    button.addEventListener('click', renderModal(elements, post))
+    button.addEventListener('click', renderModal(elements, post));
   });
 };
 
 const renderModal = (elements, post) => (e) => {
-  console.log(post.id)
-  elements.modal.modalWindow.setAttribute('id', `${post.id}`);
-  elements.modal.header.innerText = post.title;
-  elements.modal.content.innerText = post.description;
+  const visitedPostId = post.id;
+  const visitedPostElement = document.querySelector(`[post-id="${visitedPostId}"]`);
+  visitedPostElement.classList.remove('fw-bold');
+  visitedPostElement.classList.add('fw-normal');
+  elements.modal.modalWindow.setAttribute('id', 'modal');
+  const { header } = elements.modal;
+  header.innerText = post.title;
+  const { content } = elements.modal;
+  content.innerText = post.description;
   elements.modal.link.setAttribute('href', post.link);
-}
+};
 
 const renderFeeds = (state, elements) => {
   const cardElement = document.createElement('div');

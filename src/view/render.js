@@ -1,4 +1,3 @@
-
 const renderErrors = (state, elements) => {
   if (!state.form.valid) {
     elements.inputElement.classList.add('is-invalid');
@@ -13,7 +12,22 @@ const renderErrors = (state, elements) => {
   elements.inputElement.focus();
 };
 
+const renderModal = (state, elements, post) => (e) => {
+  const visitedPostId = post.id;
+  state.uiState.visitedPostIds.add(visitedPostId);
+  const visitedPostElement = document.querySelector(`[data-id='${visitedPostId}']`);
+  visitedPostElement.classList.remove('fw-bold');
+  visitedPostElement.classList.add('fw-normal', 'link-secondary');
+  elements.modal.modalWindow.setAttribute('id', 'modal');
+  const { header } = elements.modal;
+  header.innerText = post.title;
+  const { content } = elements.modal;
+  content.innerText = post.description;
+  elements.modal.link.setAttribute('href', post.link);
+};
+
 const renderPosts = (state, elements) => {
+  elements.postsColumn.textContent = '';
   const cardElement = document.createElement('div');
   cardElement.classList.add('card', 'border-0');
   elements.postsColumn.append(cardElement);
@@ -38,7 +52,7 @@ const renderPosts = (state, elements) => {
 
     const linkElement = document.createElement('a');
     linkElement.classList.add('fw-bold');
-    linkElement.setAttribute('post-id', `${post.id}`);
+    linkElement.setAttribute('data-id', `${post.id}`);
     linkElement.setAttribute('href', post.link);
     linkElement.setAttribute('target', '_blank');
     linkElement.setAttribute('rel', 'noopener noreferrer');
@@ -48,29 +62,17 @@ const renderPosts = (state, elements) => {
     const button = document.createElement('button');
     button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
     button.setAttribute('type', 'button');
-    button.setAttribute('data-id', '2');
+    button.setAttribute('data-id', `${post.id}`);
     button.dataset.bsToggle = 'modal';
     button.dataset.bsTarget = '#modal';
     button.innerText = 'Просмотр';
     listItemElement.append(button);
-    button.addEventListener('click', renderModal(elements, post));
+    button.addEventListener('click', renderModal(state, elements, post));
   });
 };
 
-const renderModal = (elements, post) => (e) => {
-  const visitedPostId = post.id;
-  const visitedPostElement = document.querySelector(`[post-id="${visitedPostId}"]`);
-  visitedPostElement.classList.remove('fw-bold');
-  visitedPostElement.classList.add('fw-normal');
-  elements.modal.modalWindow.setAttribute('id', 'modal');
-  const { header } = elements.modal;
-  header.innerText = post.title;
-  const { content } = elements.modal;
-  content.innerText = post.description;
-  elements.modal.link.setAttribute('href', post.link);
-};
-
 const renderFeeds = (state, elements) => {
+  elements.feedsColumn.innerText = '';
   const cardElement = document.createElement('div');
   cardElement.classList.add('card', 'border-0');
   elements.feedsColumn.append(cardElement);

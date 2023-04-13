@@ -34,7 +34,7 @@ const app = () => {
       posts: [],
     },
     uiState: {
-      visitedPosts: [],
+      visitedPostIds: new Set(),
     },
   };
 

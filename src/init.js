@@ -4,6 +4,7 @@ import i18n from 'i18next';
 import formHandler from './controller.js';
 import render from './view/render.js';
 import texts from './resources.js';
+import updatePosts from './updatePosts.js';
 // https://rt.com/rss/news
 
 // http://www.dp.ru/exportnews.xml
@@ -55,6 +56,7 @@ const app = () => {
   const watchedState = onChange(initialState, render(initialState, elements));
 
   elements.form.addEventListener('submit', formHandler(watchedState, initialState, i18nextInstance));
+  updatePosts(watchedState, initialState);
 };
 
 export default app;

@@ -17,16 +17,16 @@ export default (watchedState, state, i18nextInstance) => (e) => {
         .then((responce) => {
           const xmlString = responce.data.contents;
           const parsedXML = parseRSS(xmlString);
-          const [newFeed, newPosts] = getFeedandPosts(parsedXML);
+          const [newFeed, newPosts] = getFeedandPosts(parsedXML, url);
           state.rss.feeds.push(newFeed);
           watchedState.rss.posts.push(...newPosts);
+          console.log(state)
         })
         .catch((e) => console.log(e));
     })
     .catch((err) => {
       const [error] = err.errors;
       state.form.error = error;
-      console.log(state)
       watchedState.form.valid = false;
     });
 };

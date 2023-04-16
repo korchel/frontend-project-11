@@ -1,13 +1,13 @@
 import _ from 'lodash';
 
-const getFeedandPosts = (parsedXML) => {
+const getFeedandPosts = (parsedXML, url = null) => {
   const channel = parsedXML.querySelector('channel');
 
   const feedTitle = channel.querySelector('title').textContent;
   const feedDescription = channel.querySelector('description').textContent;
   const feedLink = channel.querySelector('link').textContent;
   const newFeed = {
-    title: feedTitle, description: feedDescription, link: feedLink, id: _.uniqueId(),
+    title: feedTitle, description: feedDescription, link: feedLink, id: _.uniqueId(), rssUrl: url,
   };
 
   const postItems = channel.querySelectorAll('item');

@@ -47,11 +47,15 @@ const renderPosts = (state, elements) => {
 
   state.rss.posts.forEach((post) => {
     const listItemElement = document.createElement('li');
-    listItemElement.classList.add('list-group-item', 'd-flex', 'ustify-content-between', 'align-items-start', 'border-0', 'border-end-0');
+    listItemElement.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
     postsListElement.appendChild(listItemElement);
 
     const linkElement = document.createElement('a');
     linkElement.classList.add('fw-bold');
+    if (state.uiState.visitedPostIds.has(post.id)) {
+      linkElement.classList.remove('fw-bold');
+      linkElement.classList.add('fw-normal', 'link-secondary');
+    }
     linkElement.setAttribute('data-id', `${post.id}`);
     linkElement.setAttribute('href', post.link);
     linkElement.setAttribute('target', '_blank');

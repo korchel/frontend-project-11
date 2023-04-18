@@ -27,7 +27,6 @@ const app = () => {
     form: {
       processState: 'filling',
       processError: null,
-      valid: true,
       error: '',
     },
     rss: {

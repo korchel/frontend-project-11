@@ -12,21 +12,20 @@ export default (watchedState, state, i18nextInstance) => (e) => {
   validateForm(i18nextInstance, url, feedLinks)
     .then(() => {
       state.form.error = '';
-      watchedState.form.valid = true;
       axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${url}`)
         .then((responce) => {
           const xmlString = responce.data.contents;
           const parsedXML = parseRSS(xmlString);
           const [newFeed, newPosts] = getFeedandPosts(parsedXML, url);
-          state.rss.feeds.push(newFeed);
+          watchedState.form.processState = 'loaded';
+          watchedState.rss.feeds.push(newFeed);
           watchedState.rss.posts.push(...newPosts);
-          console.log(state)
         })
         .catch((e) => console.log(e));
     })
     .catch((err) => {
       const [error] = err.errors;
       state.form.error = error;
-      watchedState.form.valid = false;
+      watchedState.form.processState = 'failed';
     });
 };

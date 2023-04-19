@@ -1,4 +1,4 @@
-const renderFeeds = (state, elements) => {
+const renderFeeds = (state, elements, i18nextInstance) => {
   elements.feedsColumn.innerText = '';
   const cardElement = document.createElement('div');
   cardElement.classList.add('card', 'border-0');
@@ -10,7 +10,7 @@ const renderFeeds = (state, elements) => {
 
   const listHeaderElement = document.createElement('h2');
   listHeaderElement.classList.add('card-title', 'h4');
-  listHeaderElement.innerText = 'Фиды';
+  listHeaderElement.innerText = i18nextInstance.t('columns.feeds');
   cardBodyElement.append(listHeaderElement);
 
   const feedsListElement = document.createElement('ul');

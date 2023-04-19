@@ -1,6 +1,6 @@
 import renderModal from './renderModal.js';
 
-const renderPosts = (state, elements) => {
+const renderPosts = (state, elements, i18nextInstance) => {
   elements.postsColumn.textContent = '';
   const cardElement = document.createElement('div');
   cardElement.classList.add('card', 'border-0');
@@ -12,7 +12,7 @@ const renderPosts = (state, elements) => {
 
   const listHeaderElement = document.createElement('h2');
   listHeaderElement.classList.add('card-title', 'h4');
-  listHeaderElement.innerText = 'Посты';
+  listHeaderElement.innerText = i18nextInstance.t('columns.posts');
   cardBodyElement.append(listHeaderElement);
 
   const postsListElement = document.createElement('ul');
@@ -43,7 +43,7 @@ const renderPosts = (state, elements) => {
     button.setAttribute('data-id', `${post.id}`);
     button.dataset.bsToggle = 'modal';
     button.dataset.bsTarget = '#modal';
-    button.innerText = 'Просмотр';
+    button.innerText = i18nextInstance.t('previewButton');
     listItemElement.append(button);
     button.addEventListener('click', renderModal(state, elements, post));
   });

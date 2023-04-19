@@ -14,10 +14,10 @@ export default (watchedState, state, i18nextInstance) => (e) => {
       state.form.error = '';
       axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${url}`)
         .then((responce) => {
+          watchedState.form.processState = 'loaded';
           const xmlString = responce.data.contents;
           const parsedXML = parseRSS(xmlString);
           const [newFeed, newPosts] = getFeedandPosts(parsedXML, url);
-          watchedState.form.processState = 'loaded';
           watchedState.rss.feeds.push(newFeed);
           watchedState.rss.posts.push(...newPosts);
         })

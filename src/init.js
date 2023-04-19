@@ -52,7 +52,7 @@ const app = () => {
     },
   };
 
-  const watchedState = onChange(initialState, render(initialState, elements));
+  const watchedState = onChange(initialState, render(initialState, elements, i18nextInstance));
 
   elements.form.addEventListener('submit', formHandler(watchedState, initialState, i18nextInstance));
   updatePosts(watchedState, initialState);

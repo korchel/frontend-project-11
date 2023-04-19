@@ -1,4 +1,4 @@
-const renderErrors = (state, elements) => {
+const renderError = (state, elements) => {
   elements.inputElement.classList.add('is-invalid');
   elements.feedbackElement.classList.replace('text-success', 'text-danger');
   elements.feedbackElement.innerText = state.form.error;
@@ -6,4 +6,4 @@ const renderErrors = (state, elements) => {
   elements.inputElement.focus();
 };
 
-export default renderErrors;
+export default renderError;

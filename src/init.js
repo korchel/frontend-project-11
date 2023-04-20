@@ -3,7 +3,7 @@ import i18n from 'i18next';
 
 import formHandler from './controller.js';
 import render from './view/render.js';
-import texts from './resources.js';
+import texts from '../locales/ru.js';
 import updatePosts from './updatePosts.js';
 // https://rt.com/rss/news
 
@@ -26,7 +26,6 @@ const app = () => {
   const initialState = {
     form: {
       processState: 'filling',
-      processError: null,
       error: '',
     },
     rss: {

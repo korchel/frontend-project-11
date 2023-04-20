@@ -8,6 +8,7 @@ export default (watchedState, state, i18nextInstance) => (e) => {
   e.preventDefault();
   const formData = new FormData(e.target);
   const url = formData.get('url');
+  
   const feedLinks = watchedState.rss.feeds.map((feed) => feed.link);
   validateForm(i18nextInstance, url, feedLinks)
     .then(() => {
@@ -16,12 +17,20 @@ export default (watchedState, state, i18nextInstance) => (e) => {
         .then((responce) => {
           watchedState.form.processState = 'loaded';
           const xmlString = responce.data.contents;
-          const parsedXML = parseRSS(xmlString);
-          const [newFeed, newPosts] = getFeedandPosts(parsedXML, url);
-          watchedState.rss.feeds.push(newFeed);
-          watchedState.rss.posts.push(...newPosts);
+          try {
+            const parsedXML = parseRSS(xmlString);
+            const [newFeed, newPosts] = getFeedandPosts(parsedXML, url);
+            watchedState.rss.feeds.push(newFeed);
+            watchedState.rss.posts.push(...newPosts);
+          } catch (e) {
+            state.form.error = i18nextInstance.t('error.parsingError');
+            watchedState.form.processState = 'failed';
+          }
         })
-        .catch((e) => console.log(e));
+        .catch((e) => {
+          state.form.error = i18nextInstance.t('error.networkError');
+          watchedState.form.processState = 'failed';
+        });
     })
     .catch((err) => {
       const [error] = err.errors;

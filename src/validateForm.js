@@ -1,6 +1,6 @@
 import { string, setLocale } from 'yup';
 
-const validateForm = (i18nextInstance, url, feedLinks) => {
+const validateForm = (i18nextInstance, url, usedRss) => {
   setLocale({
     mixed: {
       required: i18nextInstance.t('error.validation.required'),
@@ -10,7 +10,7 @@ const validateForm = (i18nextInstance, url, feedLinks) => {
       url: i18nextInstance.t('error.validation.url'),
     },
   });
-  const schema = string().url().required().notOneOf(feedLinks);
+  const schema = string().url().required().notOneOf(usedRss);
   return schema.validate(url);
 };
 

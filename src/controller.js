@@ -7,11 +7,11 @@ import getFeedandPosts from './getFeedandPosts.js';
 
 export default (watchedState, state, i18nextInstance) => (event) => {
   event.preventDefault();
-  watchedState.form.processState = 'fillng';
+  watchedState.form.processState = 'fillng'; // это допустимо?
   const formData = new FormData(event.target);
   const url = formData.get('url');
-  const feedLinks = watchedState.rss.feeds.map((feed) => feed.rssUrl);
-  validateForm(i18nextInstance, url, feedLinks)
+  const usedRss = state.rss.feeds.map((feed) => feed.rssUrl);
+  validateForm(i18nextInstance, url, usedRss)
     .then(() => {
       state.form.error = '';
       axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${url}`)
@@ -21,8 +21,8 @@ export default (watchedState, state, i18nextInstance) => (event) => {
           try {
             const parsedXML = parseRSS(xmlString);
             const [newFeed, newPosts] = getFeedandPosts(parsedXML, url);
-            watchedState.rss.feeds.push(newFeed);
-            watchedState.rss.posts.push(...newPosts);
+            watchedState.rss.feeds = [...state.rss.feeds, newFeed];
+            watchedState.rss.posts = [...state.rss.posts, ...newPosts];
           } catch (e) {
             state.form.error = i18nextInstance.t('error.parsing');
             watchedState.form.processState = 'failed';

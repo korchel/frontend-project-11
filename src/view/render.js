@@ -12,6 +12,9 @@ const render = (state, elements, i18nextInstance) => (path, value) => {
       if (value === 'failed') {
         renderError(state, elements);
       }
+      if (value === 'filling') {
+        break;
+      }
       break;
     case 'rss.posts':
       renderPosts(state, elements, i18nextInstance);

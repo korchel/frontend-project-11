@@ -1,4 +1,4 @@
-const renderModal = (state, elements, post) => (e) => {
+const renderModal = (state, elements, post) => () => {
   const visitedPostId = post.id;
   state.uiState.visitedPostIds.add(visitedPostId);
   const visitedPostElement = document.querySelector(`[data-id='${visitedPostId}']`);

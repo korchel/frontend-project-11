@@ -1,9 +1,10 @@
 const renderSuccess = (elements, i18nextInstance) => {
-  elements.inputElement.classList.remove('is-invalid');
-  elements.feedbackElement.classList.replace('text-danger', 'text-success');
-  elements.feedbackElement.innerText = i18nextInstance.t('success');
-  elements.form.reset();
-  elements.inputElement.focus();
+  const { inputElement, feedbackElement, form } = elements;
+  inputElement.classList.remove('is-invalid');
+  feedbackElement.classList.replace('text-danger', 'text-success');
+  feedbackElement.innerText = i18nextInstance.t('success');
+  form.reset();
+  inputElement.focus();
 };
 
 export default renderSuccess;

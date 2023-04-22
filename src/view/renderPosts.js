@@ -1,10 +1,12 @@
 import renderModal from './renderModal.js';
 
 const renderPosts = (state, elements, i18nextInstance) => {
-  elements.postsColumn.textContent = '';
+  const { postsColumn } = elements;
+
+  postsColumn.textContent = '';
   const cardElement = document.createElement('div');
   cardElement.classList.add('card', 'border-0');
-  elements.postsColumn.append(cardElement);
+  postsColumn.append(cardElement);
 
   const cardBodyElement = document.createElement('div');
   cardBodyElement.classList.add('card-body');
@@ -25,6 +27,7 @@ const renderPosts = (state, elements, i18nextInstance) => {
     postsListElement.appendChild(listItemElement);
 
     const linkElement = document.createElement('a');
+    linkElement.addEventListener('click', renderModal(state, elements, post));
     linkElement.classList.add('fw-bold');
     if (state.uiState.visitedPostIds.has(post.id)) {
       linkElement.classList.remove('fw-bold');

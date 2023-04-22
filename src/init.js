@@ -5,13 +5,6 @@ import formHandler from './controller.js';
 import render from './view/render.js';
 import texts from '../locales/ru.js';
 import updatePosts from './updatePosts.js';
-// https://rt.com/rss/news
-
-// http://www.dp.ru/exportnews.xml
-
-// http://www.fontanka.ru/fontanka.rss
-
-// http://lenta.ru/l/r/EX/import.rss
 
 const app = () => {
   const i18nextInstance = i18n.createInstance();

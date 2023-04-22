@@ -1,8 +1,10 @@
 const renderFeeds = (state, elements, i18nextInstance) => {
-  elements.feedsColumn.innerText = '';
+  const { feedsColumn } = elements;
+
+  feedsColumn.innerText = '';
   const cardElement = document.createElement('div');
   cardElement.classList.add('card', 'border-0');
-  elements.feedsColumn.append(cardElement);
+  feedsColumn.append(cardElement);
 
   const cardBodyElement = document.createElement('div');
   cardBodyElement.classList.add('card-body');

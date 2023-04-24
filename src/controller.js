@@ -24,12 +24,12 @@ export default (watchedState, state, i18nextInstance) => (event) => {
             watchedState.rss.feeds = [...state.rss.feeds, newFeed];
             watchedState.rss.posts = [...state.rss.posts, ...newPosts];
           } catch (e) {
-            state.form.error = i18nextInstance.t('error.parsing');
+            state.form.error = 'error.parsing';
             watchedState.form.processState = 'failed';
           }
         })
         .catch(() => {
-          state.form.error = i18nextInstance.t('error.network');
+          state.form.error = 'error.network';
           watchedState.form.processState = 'failed';
         });
     })

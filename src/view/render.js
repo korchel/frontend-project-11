@@ -10,7 +10,7 @@ const render = (state, elements, i18nextInstance) => (path, value) => {
         renderSuccess(elements, i18nextInstance);
       }
       if (value === 'failed') {
-        renderError(state, elements);
+        renderError(state, elements, i18nextInstance);
       }
       if (value === 'filling') {
         break;

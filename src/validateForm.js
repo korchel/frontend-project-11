@@ -3,11 +3,11 @@ import { string, setLocale } from 'yup';
 const validateForm = (i18nextInstance, url, usedRss) => {
   setLocale({
     mixed: {
-      required: i18nextInstance.t('error.validation.required'),
-      notOneOf: i18nextInstance.t('error.validation.notOneOf'),
+      required: 'error.validation.required',
+      notOneOf: 'error.validation.notOneOf',
     },
     string: {
-      url: i18nextInstance.t('error.validation.url'),
+      url: 'error.validation.url',
     },
   });
   const schema = string().url().required().notOneOf(usedRss);

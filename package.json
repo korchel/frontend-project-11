@@ -1,7 +1,7 @@
 {
   "name": "@hexlet/code",
   "version": "1.0.0",
-  "description": "[![Actions Status](https://github.com/korchel/frontend-project-11/workflows/hexlet-check/badge.svg)](https://github.com/korchel/frontend-project-11/actions)",
+  "description": "RSS generator",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -22,16 +22,10 @@
   },
   "homepage": "https://github.com/korchel/frontend-project-11#readme",
   "devDependencies": {
-    "@babel/core": "^7.21.0",
-    "@babel/eslint-parser": "^7.19.1",
-    "@babel/preset-env": "^7.20.2",
-    "babel-loader": "^9.1.2",
     "css-loader": "^6.7.3",
     "eslint": "^8.35.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-babel": "^5.3.1",
     "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-jest": "^27.2.1",
     "filemanager-webpack-plugin": "^8.0.0",
     "html-webpack-plugin": "^5.5.0",
     "postcss-loader": "^7.0.2",

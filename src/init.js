@@ -3,7 +3,7 @@ import i18n from 'i18next';
 
 import formHandler from './controller.js';
 import render from './view/render.js';
-import texts from '../locales/ru.js';
+import texts from './ru.js';
 import updatePosts from './updatePosts.js';
 
 const app = () => {
@@ -19,7 +19,7 @@ const app = () => {
   const initialState = {
     form: {
       processState: 'filling',
-      error: '',
+      error: null,
     },
     rss: {
       feeds: [],

@@ -1,3 +1,8 @@
+### RSS Aggregator
+_____
+
+RSS Aggregator is a web application that allows you to follow content from online newspapers, blogs, etc. by aggregating and updating posts from different feeds. All you need is to provide an RSS link of a feed of your interest.
+
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/korchel/frontend-project-11/workflows/hexlet-check/badge.svg)](https://github.com/korchel/frontend-project-11/actions)
 

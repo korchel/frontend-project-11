@@ -10,6 +10,7 @@ export default {
       network: 'Ошибка сети',
     },
     success: 'Rss успешно загружен',
+    loading: 'Идет загрузка',
     previewButton: 'Просмотр',
     columns: {
       posts: 'Посты',

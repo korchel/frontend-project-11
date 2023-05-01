@@ -25,12 +25,11 @@ const updatePosts = (watchedState, state) => {
           post.id = _.uniqueId();
         });
         return newPosts;
-      }).catch((e) => []);
+      }).catch(() => []);
   });
 
   Promise.all(promises).then((data) => {
     data.forEach((newPosts) => {
-      console.log(newPosts)
       watchedState.rss.posts = [...newPosts, ...state.rss.posts];
     });
   });
@@ -59,35 +58,31 @@ const control = (watchedState, state) => (event) => {
   const url = new URL(`https://allorigins.hexlet.app/get?disableCache=true&url=${rssURL}`);
   const usedRss = state.rss.feeds.map((feed) => feed.rssUrl);
   validateForm(rssURL, usedRss)
-    .then(() => {
-      state.form.error = '';
-      axios.get(url)
-        .then((responce) => {
-          const xmlString = responce.data.contents;
-          try {
-            const [newFeed, newPosts] = parseRSS(xmlString, rssURL);
-            newFeed.id = _.uniqueId();
-            newFeed.rssUrl = rssURL;
-            newPosts.forEach((post) => {
-              post.feedId = newFeed.id;
-              post.id = _.uniqueId();
-            });
-            watchedState.rss.feeds = [newFeed, ...state.rss.feeds];
-            watchedState.rss.posts = [...newPosts, ...state.rss.posts];
-          } catch (e) {
-            state.form.error = 'error.parsing';
-            watchedState.processState = 'failed';
-          }
-          watchedState.processState = 'loaded';
-        })
-        .catch(() => {
-          state.form.error = 'error.network';
-          watchedState.processState = 'failed';
-        });
+    .then(() => axios.get(url))
+    .then((responce) => {
+      const xmlString = responce.data.contents;
+      const [newFeed, newPosts] = parseRSS(xmlString, rssURL);
+      newFeed.id = _.uniqueId();
+      newFeed.rssUrl = rssURL;
+      newPosts.forEach((post) => {
+        post.feedId = newFeed.id;
+        post.id = _.uniqueId();
+      });
+      watchedState.rss.feeds = [newFeed, ...state.rss.feeds];
+      watchedState.rss.posts = [...newPosts, ...state.rss.posts];
+      watchedState.processState = 'loaded';
     })
-    .catch((err) => {
-      const [error] = err.errors;
-      state.form.error = error;
+    .catch((error) => {
+      if (error.isParsingError) {
+        state.form.error = 'error.parsing';
+      }
+      if (error.isAxiosError) {
+        state.form.error = 'error.network';
+      }
+      if (error.errors) {
+        const [validationError] = error.errors;
+        state.form.error = validationError;
+      }
       watchedState.processState = 'failed';
     });
 };
@@ -140,8 +135,3 @@ const app = () => {
 };
 
 export default app;
-
-// https://rt.com/rss/news
-// http://www.dp.ru/exportnews.xml
-// http://www.fontanka.ru/fontanka.rss
-// http://lenta.ru/l/r/EX/import.rss

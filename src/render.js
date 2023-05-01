@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 import onChange from 'on-change';
 
-const renderModal = (elements, post) => (path, value) => {
+const renderModal = (elements, post) => (_path, _value) => {
   const { header, content, modalWindow } = elements.modal;
 
   const visitedPostElement = document.querySelector(`[data-id='${post.id}']`);

@@ -1,6 +1,4 @@
-import _ from 'lodash';
-
-const getFeedAndPosts = (parsedXML, url) => {
+const getFeedAndPosts = (parsedXML) => {
   const channel = parsedXML.querySelector('channel');
 
   const feedTitle = channel.querySelector('title').textContent;
@@ -25,13 +23,16 @@ const getFeedAndPosts = (parsedXML, url) => {
   return [newFeed, newPosts];
 };
 
-const parseRSS = (xmlString, url = null) => {
+const parseRSS = (xmlString) => {
   const rssParser = new DOMParser();
   const parsedXML = rssParser.parseFromString(xmlString, 'application/xml');
-  if (parsedXML.querySelector('parsererror')) {
-    throw new Error();
+  const parseError = parsedXML.querySelector('parsererror');
+  if (parseError) {
+    const error = new Error(parseError.textContent);
+    error.isParsingError = true;
+    throw error;
   }
-  return getFeedAndPosts(parsedXML, url);
+  return getFeedAndPosts(parsedXML);
 };
 
 export default parseRSS;

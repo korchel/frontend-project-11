@@ -1,35 +1,45 @@
 /* eslint-disable no-unused-vars */
-import onChange from 'on-change';
-
-const renderModal = (elements, post) => (_path, _value) => {
+const renderModal = (state, elements, id) => {
   const { header, content, modalWindow } = elements.modal;
+  const [postToSeeInModal] = state.rss.posts.filter((post) => post.id === id);
 
-  const visitedPostElement = document.querySelector(`[data-id='${post.id}']`);
+  const visitedPostElement = document.querySelector(`[data-id='${id}']`);
   visitedPostElement.classList.remove('fw-bold');
   visitedPostElement.classList.add('fw-normal', 'link-secondary');
 
   modalWindow.setAttribute('id', 'modal');
-  header.innerText = post.title;
-  content.innerText = post.description;
-  elements.modal.link.setAttribute('href', post.link);
+  header.innerText = postToSeeInModal.title;
+  content.innerText = postToSeeInModal.description;
+  elements.modal.link.setAttribute('href', postToSeeInModal.link);
 };
 
 const renderError = (state, elements, i18nextInstance) => {
-  const { inputElement, feedbackElement, form } = elements;
+  const {
+    inputElement, feedbackElement, form, submitButton,
+  } = elements;
+
+  submitButton.disabled = false;
+  inputElement.disabled = false;
 
   inputElement.classList.add('is-invalid');
-  feedbackElement.classList.replace('text-success', 'text-danger');
+  feedbackElement.classList.remove('text-success', 'text-info');
+  feedbackElement.classList.add('text-danger');
   feedbackElement.innerText = i18nextInstance.t(state.form.error);
 
-  form.reset();
   inputElement.focus();
 };
 
 const renderSuccess = (elements, i18nextInstance) => {
-  const { inputElement, feedbackElement, form } = elements;
+  const {
+    inputElement, feedbackElement, form, submitButton,
+  } = elements;
+
+  submitButton.disabled = false;
+  inputElement.disabled = false;
 
   inputElement.classList.remove('is-invalid');
-  feedbackElement.classList.replace('text-danger', 'text-success');
+  feedbackElement.classList.remove('text-danger', 'text-info');
+  feedbackElement.classList.add('text-success');
   feedbackElement.innerText = i18nextInstance.t('success');
 
   form.reset();
@@ -37,10 +47,14 @@ const renderSuccess = (elements, i18nextInstance) => {
 };
 
 const renderLoading = (elements, i18nextInstance) => {
-  const { feedbackElement, inputElement } = elements;
+  const { feedbackElement, inputElement, submitButton } = elements;
+
+  submitButton.disabled = true;
+  inputElement.disabled = true;
 
   inputElement.classList.remove('is-invalid');
-  feedbackElement.classList.replace('text-success', 'text-danger');
+  feedbackElement.classList.remove('text-danger', 'text-success');
+  feedbackElement.classList.add('text-info');
   feedbackElement.innerText = i18nextInstance.t('loading');
 };
 
@@ -66,16 +80,11 @@ const renderPosts = (state, elements, i18nextInstance) => {
   cardElement.append(postsListElement);
 
   state.rss.posts.forEach((post) => {
-    const watchedUiState = onChange(state.uiState, renderModal(elements, post));
-
     const listItemElement = document.createElement('li');
     listItemElement.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
     postsListElement.appendChild(listItemElement);
 
     const linkElement = document.createElement('a');
-    linkElement.addEventListener('click', () => {
-      watchedUiState.visitedPostIds.add(post.id);
-    });
     linkElement.classList.add('fw-bold');
     if (state.uiState.visitedPostIds.has(post.id)) {
       linkElement.classList.remove('fw-bold');
@@ -96,9 +105,6 @@ const renderPosts = (state, elements, i18nextInstance) => {
     button.dataset.bsTarget = '#modal';
     button.innerText = i18nextInstance.t('previewButton');
     listItemElement.append(button);
-    button.addEventListener('click', () => {
-      watchedUiState.visitedPostIds.add(post.id);
-    });
   });
 };
 
@@ -141,25 +147,25 @@ const renderFeeds = (state, elements, i18nextInstance) => {
 };
 
 const render = (state, elements, i18nextInstance) => (path, value) => {
-  const { submitButton } = elements;
+  const { submitButton, inputElement } = elements;
 
   switch (path) {
     case 'processState':
       if (value === 'loaded') {
-        submitButton.disabled = false;
         renderSuccess(elements, i18nextInstance);
       }
       if (value === 'failed') {
-        submitButton.disabled = false;
         renderError(state, elements, i18nextInstance);
       }
       if (value === 'filling') {
         break;
       }
       if (value === 'loading') {
-        submitButton.disabled = true;
         renderLoading(elements, i18nextInstance);
       }
+      break;
+    case 'uiState.currentPostId':
+      renderModal(state, elements, value);
       break;
     case 'rss.posts':
       renderPosts(state, elements, i18nextInstance);

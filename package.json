@@ -1,7 +1,7 @@
 {
   "name": "@hexlet/code",
   "version": "1.0.0",
-  "description": "RSS generator",
+  "description": "RSS aggregator",
   "main": "index.js",
   "type": "module",
   "scripts": {

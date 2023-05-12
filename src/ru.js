@@ -8,6 +8,7 @@ export default {
       },
       parsing: 'Ресурс не содержит валидный RSS',
       network: 'Ошибка сети',
+      somethingWrong: 'Что-то пошло не так',
     },
     success: 'Rss успешно загружен',
     loading: 'Идет загрузка',

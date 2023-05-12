@@ -9,11 +9,32 @@ import render from './render.js';
 import texts from './ru.js';
 import parseRSS from './parseRSS.js';
 
+const getUrl = (str) => {
+  const url = new URL('https://allorigins.hexlet.app/get');
+  url.searchParams.set('disableCache', 'true');
+  url.searchParams.set('url', str);
+  return url;
+};
+
+const handleError = (error) => {
+  if (error.isParsingError) {
+    return 'error.parsing';
+  }
+  if (error.isAxiosError) {
+    return 'error.network';
+  }
+  if (error.errors) {
+    const [validationError] = error.errors;
+    return validationError;
+  }
+  return 'error.somethingWrong';
+};
+
 const updatePosts = (watchedState, state) => {
   const { feeds } = state.rss;
 
   const promises = feeds.map((feed) => {
-    const url = new URL(`https://allorigins.hexlet.app/get?disableCache=true&url=${feed.rssUrl}`);
+    const url = new URL(getUrl(feed.rssUrl));
     return axios.get(url)
       .then((responce) => {
         const xmlString = responce.data.contents;
@@ -28,34 +49,32 @@ const updatePosts = (watchedState, state) => {
       }).catch(() => []);
   });
 
-  Promise.all(promises).then((data) => {
+  Promise.allSettled(promises).then((data) => {
     data.forEach((newPosts) => {
-      watchedState.rss.posts = [...newPosts, ...state.rss.posts];
+      watchedState.rss.posts = [...newPosts.value, ...state.rss.posts];
     });
-  });
-  setTimeout(updatePosts, 5000, watchedState, state);
+  }).finally(() => setTimeout(updatePosts, 5000, watchedState, state));
 };
 
 const validateForm = (url, usedRss) => {
-  setLocale({
-    mixed: {
-      required: 'error.validation.required',
-      notOneOf: 'error.validation.notOneOf',
-    },
-    string: {
-      url: 'error.validation.url',
-    },
-  });
   const schema = string().url().required().notOneOf(usedRss);
   return schema.validate(url);
 };
 
 const control = (watchedState, state) => (event) => {
+  if (event.target.tagName === 'A' || event.target.tagName === 'BUTTON') {
+    const visitedPostId = event.target.dataset.id;
+    state.uiState.visitedPostIds.add(visitedPostId);
+    watchedState.uiState.currentPostId = visitedPostId;
+    return;
+  }
+
   event.preventDefault();
-  watchedState.processState = 'loading';
+
   const formData = new FormData(event.target);
+  watchedState.processState = 'loading';
   const rssURL = formData.get('url');
-  const url = new URL(`https://allorigins.hexlet.app/get?disableCache=true&url=${rssURL}`);
+  const url = new URL(getUrl(rssURL));
   const usedRss = state.rss.feeds.map((feed) => feed.rssUrl);
   validateForm(rssURL, usedRss)
     .then(() => axios.get(url))
@@ -73,16 +92,7 @@ const control = (watchedState, state) => (event) => {
       watchedState.processState = 'loaded';
     })
     .catch((error) => {
-      if (error.isParsingError) {
-        state.form.error = 'error.parsing';
-      }
-      if (error.isAxiosError) {
-        state.form.error = 'error.network';
-      }
-      if (error.errors) {
-        const [validationError] = error.errors;
-        state.form.error = validationError;
-      }
+      state.form.error = handleError(error);
       watchedState.processState = 'failed';
     });
 };
@@ -107,8 +117,19 @@ const app = () => {
       },
       uiState: {
         visitedPostIds: new Set(),
+        currentPostId: null,
       },
     };
+
+    setLocale({
+      mixed: {
+        required: 'error.validation.required',
+        notOneOf: 'error.validation.notOneOf',
+      },
+      string: {
+        url: 'error.validation.url',
+      },
+    });
 
     const elements = {
       form: document.querySelector('.rss-form'),
@@ -128,7 +149,8 @@ const app = () => {
     // eslint-disable-next-line max-len
     const watchedState = onChange(initialState, render(initialState, elements, i18nextInstance));
 
-    elements.form.addEventListener('submit', control(watchedState, initialState, i18nextInstance));
+    elements.form.addEventListener('submit', control(watchedState, initialState, elements));
+    elements.postsColumn.addEventListener('click', control(watchedState, initialState, elements));
 
     updatePosts(watchedState, initialState);
   });

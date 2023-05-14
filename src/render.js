@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 const renderModal = (state, elements, id) => {
   const { header, content, modalWindow } = elements.modal;
   const [postToSeeInModal] = state.rss.posts.filter((post) => post.id === id);
@@ -15,7 +14,7 @@ const renderModal = (state, elements, id) => {
 
 const renderError = (state, elements, i18nextInstance) => {
   const {
-    inputElement, feedbackElement, form, submitButton,
+    inputElement, feedbackElement, submitButton,
   } = elements;
 
   submitButton.disabled = false;
@@ -147,8 +146,6 @@ const renderFeeds = (state, elements, i18nextInstance) => {
 };
 
 const render = (state, elements, i18nextInstance) => (path, value) => {
-  const { submitButton, inputElement } = elements;
-
   switch (path) {
     case 'processState':
       if (value === 'loaded') {

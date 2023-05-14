@@ -62,13 +62,6 @@ const validateForm = (url, usedRss) => {
 };
 
 const control = (watchedState, state) => (event) => {
-  if (event.target.tagName === 'A' || event.target.tagName === 'BUTTON') {
-    const visitedPostId = event.target.dataset.id;
-    state.uiState.visitedPostIds.add(visitedPostId);
-    watchedState.uiState.currentPostId = visitedPostId;
-    return;
-  }
-
   event.preventDefault();
 
   const formData = new FormData(event.target);
@@ -150,7 +143,12 @@ const app = () => {
     const watchedState = onChange(initialState, render(initialState, elements, i18nextInstance));
 
     elements.form.addEventListener('submit', control(watchedState, initialState, elements));
-    elements.postsColumn.addEventListener('click', control(watchedState, initialState, elements));
+
+    elements.postsColumn.addEventListener('click', (event) => {
+      const visitedPostId = event.target.dataset.id;
+      initialState.uiState.visitedPostIds.add(visitedPostId);
+      watchedState.uiState.currentPostId = visitedPostId;
+    });
 
     updatePosts(watchedState, initialState);
   });

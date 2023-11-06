@@ -5,6 +5,8 @@ RSS Aggregator is a web application that allows you to follow content from onlin
 
 [https://frontend-project-11-red.vercel.app/](https://frontend-project-11-red.vercel.app/)
 
+![gif](rssAggregator.gif)
+
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/korchel/frontend-project-11/workflows/hexlet-check/badge.svg)](https://github.com/korchel/frontend-project-11/actions)
 
